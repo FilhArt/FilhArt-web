@@ -1,51 +1,83 @@
-/* --- CONFIGURACIÓN BASE --- */
+/* =========================================
+   1. CONFIGURACIÓN Y VARIABLES
+   ========================================= */
 :root {
+    /* Colores */
     --bg-color: #050505;
     --text-primary: #e0e0e0;
     --accent-red: #ff0000;
-    --accent-cyan: #00ffff;
+    --dark-red: #8a0000; /* Corregido nombre para consistencia */
     --blood-red: #8a0000;
+    --accent-cyan: #00ffff;
+    --discord-color: #5865F2;
+
+    /* Fuentes */
+    --font-main: 'Special Elite', cursive;
+    --font-mono: 'VT323', monospace;
+    --font-glitch: 'Rubik Glitch', cursive;
+    --font-horror: 'Creepster', cursive;
+
+    /* Capas Z-Index (Para evitar conflictos) */
+    --z-scanlines: 50;
+    --z-nav: 100;
+    --z-vignette: 500;
+    --z-overlay: 999;
+    --z-modal: 2000;
+    --z-toast: 3000;
+    --z-secret: 5000;
+    --z-mouse: 9999;
+    --z-blackout: 10000;
 }
 
-html { scroll-behavior: smooth; }
+/* =========================================
+   2. BASE Y UTILIDADES
+   ========================================= */
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     background-color: #000;
     color: var(--text-primary);
     margin: 0;
     overflow-x: hidden;
-    font-family: 'Special Elite', cursive;
+    font-family: var(--font-main);
     user-select: none;
-    cursor: crosshair; /* Cursor de mira */
+    cursor: crosshair;
+}
+
+/* Selección de texto personalizada */
+::selection {
+    background: var(--accent-red);
+    color: #000;
+    text-shadow: none;
 }
 
 /* Scrollbar personalizada */
-::-webkit-scrollbar { width: 10px; background: #000; }
-::-webkit-scrollbar-thumb { background: var(--blood-red); border-radius: 2px; }
-
-/* --- PANTALLA DE INICIO (Overlay) --- */
-#start-screen {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+::-webkit-scrollbar {
+    width: 10px;
     background: #000;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: opacity 0.5s;
 }
 
-#start-screen h1 {
-    font-family: 'VT323', monospace;
-    font-size: 2rem;
-    animation: blink 1s infinite;
+::-webkit-scrollbar-thumb {
+    background: var(--blood-red);
+    border-radius: 2px;
 }
 
-#start-screen p { color: #666; font-size: 0.8rem; margin-top: 10px; }
+/* Estilos de Texto Utilitarios */
+.redacted {
+    background: #000;
+    color: #000;
+    user-select: none;
+    cursor: help;
+}
+.redacted:hover {
+    color: #333;
+}
 
-/* --- CRT / VHS EFECTOS --- */
+/* =========================================
+   3. EFECTOS DE PANTALLA (CRT, VHS, MOUSE)
+   ========================================= */
 .crt-container {
     position: relative;
     width: 100%;
@@ -60,17 +92,94 @@ body {
     top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
     background-size: 100% 4px;
-    z-index: 50;
+    z-index: var(--z-scanlines);
     pointer-events: none;
 }
 
-/* --- HEADER Y LOGO GLITCH --- */
-header { text-align: center; padding-top: 50px; margin-bottom: 40px; }
+.vignette {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: var(--z-vignette);
+    background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 120%);
+    animation: breathe 6s infinite alternate ease-in-out;
+}
 
-.glitch-wrapper { position: relative; display: inline-block; }
+/* Rastro del Mouse */
+.cursor-trail {
+    position: fixed;
+    width: 10px; height: 10px;
+    background-color: var(--accent-red);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: var(--z-mouse);
+    opacity: 0.7;
+    animation: fadeTrail 0.5s forwards;
+    box-shadow: 0 0 10px var(--accent-red);
+}
+
+/* =========================================
+   4. PANTALLA DE INICIO (OVERLAY)
+   ========================================= */
+#start-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+    z-index: var(--z-overlay);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.5s;
+}
+
+#start-screen h1 {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    animation: blink 1s infinite;
+}
+
+#start-screen p {
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 10px;
+}
+
+/* Easter Egg: Pantalla Poseída */
+#start-screen.possessed {
+    animation: intense-shake 0.1s infinite, color-shift 0.2s infinite alternate;
+    background: #1a0000 !important;
+}
+
+.possessed-text h1 {
+    font-family: var(--font-glitch) !important;
+    color: red !important;
+    font-size: 3rem !important;
+    text-shadow: 0 0 20px red, 0 0 40px black;
+    text-transform: uppercase;
+    animation: blink 0.1s infinite !important;
+    max-width: 80%;
+    text-align: center;
+}
+.possessed-text p { display: none !important; }
+
+/* =========================================
+   5. HEADER Y NAVEGACIÓN
+   ========================================= */
+header {
+    text-align: center;
+    padding-top: 50px;
+    margin-bottom: 40px;
+}
+
+.glitch-wrapper {
+    position: relative;
+    display: inline-block;
+}
 
 .main-title {
-    font-family: 'Rubik Glitch', cursive;
+    font-family: var(--font-glitch);
     font-size: 6rem;
     color: #fff;
     margin: 0;
@@ -79,7 +188,6 @@ header { text-align: center; padding-top: 50px; margin-bottom: 40px; }
     text-transform: uppercase;
 }
 
-/* Capas glitch */
 .main-title::before, .main-title::after {
     content: attr(data-text);
     position: absolute;
@@ -102,22 +210,25 @@ header { text-align: center; padding-top: 50px; margin-bottom: 40px; }
 }
 
 .subtitle {
-    font-family: 'VT323', monospace;
+    font-family: var(--font-mono);
     color: var(--accent-red);
     letter-spacing: 4px;
     font-size: 1.2rem;
 }
 
-/* --- NAVEGACIÓN --- */
+/* Navegación */
 .glitch-nav {
     display: flex; justify-content: center; gap: 20px; padding: 20px;
-    background: rgba(20,0,0,0.3); border-top: 1px solid #444; border-bottom: 1px solid #444;
-    flex-wrap: wrap; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(5px);
+    background: rgba(20,0,0,0.3);
+    border-top: 1px solid #444; border-bottom: 1px solid #444;
+    flex-wrap: wrap; position: sticky; top: 0;
+    z-index: var(--z-nav);
+    backdrop-filter: blur(5px);
 }
 
 .nav-btn {
     background: transparent; border: 1px solid transparent; color: #888;
-    font-family: 'Creepster', cursive; font-size: 1.5rem; cursor: pointer;
+    font-family: var(--font-horror); font-size: 1.5rem; cursor: pointer;
     transition: 0.2s; text-transform: uppercase;
 }
 
@@ -125,18 +236,29 @@ header { text-align: center; padding-top: 50px; margin-bottom: 40px; }
     color: #fff; text-shadow: 0 0 10px var(--accent-red); transform: scale(1.1);
 }
 
-/* --- SECCIONES --- */
-section { max-width: 1000px; margin: 60px auto; padding: 0 20px; }
+/* =========================================
+   6. LAYOUT PRINCIPAL Y GRID DE JUEGOS
+   ========================================= */
+section {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
 
 h2.section-header {
-    font-family: 'VT323'; font-size: 2.5rem; border-bottom: 2px solid var(--accent-red);
-    display: inline-block; margin-bottom: 30px; position: relative;
+    font-family: var(--font-mono);
+    font-size: 2.5rem;
+    border-bottom: 2px solid var(--accent-red);
+    display: inline-block;
+    margin-bottom: 30px;
+    position: relative;
 }
 h2.section-header::after { content: '_'; animation: blink 0.8s infinite; }
 
-/* --- GRID DE JUEGOS --- */
 .games-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
 }
 
 .game-card {
@@ -146,7 +268,9 @@ h2.section-header::after { content: '_'; animation: blink 0.8s infinite; }
 
 .game-card:hover {
     transform: translateY(-5px) scale(1.02);
-    border-color: var(--accent-red); box-shadow: 0 0 15px var(--accent-red); z-index: 10;
+    border-color: var(--accent-red);
+    box-shadow: 0 0 15px var(--accent-red);
+    z-index: 10;
 }
 
 .game-card img {
@@ -157,9 +281,302 @@ h2.section-header::after { content: '_'; animation: blink 0.8s infinite; }
 .game-card:hover img { filter: grayscale(0%) contrast(1.1); }
 
 .game-info { padding: 15px; text-align: center; }
-.game-info h3 { font-family: 'Creepster', cursive; margin: 0; font-size: 1.8rem; color: #ddd; }
+.game-info h3 { font-family: var(--font-horror); margin: 0; font-size: 1.8rem; color: #ddd; }
 
-/* --- ANIMACIONES --- */
+/* =========================================
+   7. COMPONENTES: CLASIFICADO Y DISCORD
+   ========================================= */
+/* Carpetas Clasificadas */
+.classified-folder {
+    border: 1px dashed #444;
+    padding: 20px;
+    background: repeating-linear-gradient(45deg, #0a0a0a, #0a0a0a 10px, #111 10px, #111 20px);
+    position: relative;
+}
+
+.classified-stamp {
+    position: absolute; top: 10px; right: 10px;
+    border: 2px solid var(--accent-red); color: var(--accent-red);
+    padding: 5px 10px; font-family: var(--font-mono); font-size: 1.5rem;
+    transform: rotate(15deg); opacity: 0.7; pointer-events: none;
+}
+
+/* Sección Blog Confidencial (Lock) */
+.classified-section {
+    position: relative;
+    border: 2px dashed #444;
+    padding: 20px;
+    margin: 40px 0;
+    background: #080808;
+}
+
+.secret-content-area {
+    filter: blur(10px) grayscale(100%);
+    pointer-events: none; user-select: none;
+    transition: 2s; opacity: 0.5;
+}
+
+.secret-content-area.unlocked {
+    filter: blur(0) grayscale(0);
+    pointer-events: all; user-select: text; opacity: 1;
+}
+
+.security-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 10; background: rgba(0, 0, 0, 0.7);
+}
+
+.security-box {
+    background: #000;
+    border: 1px solid var(--accent-red);
+    padding: 30px; text-align: center;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+}
+
+.pass-input {
+    background: #111; border: 1px solid #444; color: var(--accent-cyan);
+    padding: 10px; font-family: var(--font-mono); font-size: 1.5rem;
+    text-align: center; text-transform: uppercase; margin-top: 10px; width: 200px;
+}
+
+.unlock-btn {
+    background: var(--dark-red); color: white; border: 1px solid var(--accent-red);
+    padding: 10px 20px; font-family: var(--font-mono); font-size: 1.2rem;
+    cursor: pointer; margin-top: 10px;
+}
+.unlock-btn:hover { background: red; box-shadow: 0 0 10px red; }
+
+/* Terminal Discord */
+.discord-terminal {
+    --terminal-bg: rgba(88, 101, 242, 0.05);
+    border: 1px dashed var(--discord-color);
+    background: var(--terminal-bg);
+    margin: 30px auto; max-width: 600px; padding: 0;
+    position: relative; overflow: hidden;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.discord-terminal:hover {
+    box-shadow: 0 0 15px rgba(88, 101, 242, 0.3);
+    border-style: solid;
+}
+
+.terminal-header {
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid var(--discord-color);
+    padding: 8px 15px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono); font-size: 1rem; color: var(--discord-color);
+    letter-spacing: 1px;
+}
+
+.signal-dot {
+    color: #ff3333; animation: signal-blink 1.5s infinite;
+}
+
+.terminal-content { padding: 20px; text-align: center; }
+
+.terminal-title {
+    font-family: var(--font-glitch); color: #fff; font-size: 1.8rem;
+    margin: 0 0 10px 0; text-shadow: 2px 2px 0px var(--discord-color);
+}
+
+.terminal-desc {
+    font-family: var(--font-main); color: #ccc;
+    font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4;
+}
+
+.discord-cta {
+    display: inline-block; text-decoration: none;
+    font-family: var(--font-mono); font-size: 1.4rem; color: var(--discord-color);
+    transition: all 0.3s ease; padding: 5px 10px;
+}
+.discord-cta .bracket { color: #fff; transition: margin 0.3s ease; }
+.discord-cta:hover {
+    background: var(--discord-color); color: #000;
+    box-shadow: 0 0 10px var(--discord-color);
+}
+.discord-cta:hover .bracket { color: #000; margin: 0 5px; }
+
+.scanline-decoration {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.1) 51%);
+    background-size: 100% 4px; pointer-events: none; opacity: 0.5; z-index: 1;
+}
+
+/* =========================================
+   8. FOOTER Y CONTACTO
+   ========================================= */
+footer {
+    text-align: center; padding: 50px; font-size: 0.8rem;
+    color: #555; font-family: var(--font-mono);
+}
+
+.social-links {
+    display: flex; justify-content: center; gap: 30px; margin-top: 30px; flex-wrap: wrap;
+}
+
+.social-btn {
+    color: #888; font-size: 2.5rem; transition: 0.3s; text-decoration: none;
+}
+.social-btn:hover {
+    color: #fff;
+    text-shadow: 2px 2px var(--accent-red), -2px -2px var(--accent-cyan);
+    transform: scale(1.2) rotate(-5deg);
+}
+
+.copy-email-box {
+    text-align: center; margin: 40px auto; max-width: 600px;
+    border: 1px solid #333; padding: 30px; background: rgba(10, 0, 0, 0.5);
+}
+
+.copy-btn {
+    background: var(--dark-red); color: #fff;
+    border: 1px solid var(--accent-red); padding: 10px 20px;
+    font-family: var(--font-mono); font-size: 1.5rem; cursor: pointer;
+    margin-top: 15px; transition: 0.2s;
+}
+.copy-btn:hover { background: var(--accent-red); box-shadow: 0 0 15px var(--accent-red); }
+
+/* Notificación Toast */
+#copy-toast {
+    visibility: hidden; min-width: 250px;
+    background-color: #111; color: var(--accent-cyan); text-align: center;
+    border: 1px solid var(--accent-cyan); padding: 16px;
+    position: fixed; z-index: var(--z-toast); left: 50%; bottom: 30px;
+    transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 1.2rem;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+#copy-toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+
+/* Firma del Sistema */
+.system-signature {
+    margin-top: 15px; font-family: var(--font-mono); font-size: 1.1rem;
+    color: #555; letter-spacing: 1px; text-transform: uppercase;
+    display: inline-block; padding: 5px 10px;
+    border: 1px solid transparent; transition: 0.3s;
+}
+.system-signature:hover {
+    border: 1px dashed #333; background: rgba(0, 255, 255, 0.05); color: #888;
+}
+
+.creator-name {
+    color: var(--accent-cyan); font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    cursor: help; position: relative;
+}
+.creator-name:hover {
+    text-shadow: 2px 0 var(--accent-red), -2px 0 blue; animation: glitch-anim 0.2s infinite;
+}
+.cursor-blink { color: var(--accent-cyan); animation: blink 1s step-end infinite; }
+
+/* =========================================
+   9. MODALES Y VENTANAS EMERGENTES
+   ========================================= */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9); z-index: var(--z-modal);
+    display: none; justify-content: center; align-items: center;
+    backdrop-filter: blur(5px);
+}
+.modal-overlay.active { display: flex; animation: openWindow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+
+.modal-window {
+    background: #050505; border: 2px solid var(--accent-red);
+    width: 90%; max-width: 800px; max-height: 90vh;
+    overflow-y: auto; box-shadow: 0 0 30px var(--accent-red), inset 0 0 20px rgba(255,0,0,0.1);
+    position: relative; padding: 2px;
+}
+
+.modal-header {
+    background: var(--dark-red); color: #fff; padding: 10px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 2px solid var(--accent-red);
+    font-family: var(--font-mono); font-size: 1.5rem;
+}
+
+.close-btn {
+    background: transparent; border: none; color: #fff;
+    font-size: 1.5rem; cursor: pointer; font-family: var(--font-mono);
+}
+.close-btn:hover { color: var(--accent-red); }
+
+.modal-body { padding: 30px; font-family: var(--font-main); }
+.modal-grid { display: flex; gap: 30px; flex-wrap: wrap; }
+
+.modal-img { flex: 1; min-width: 300px; }
+.modal-img img { width: 100%; border: 1px solid #333; filter: sepia(0.5); }
+
+.modal-info { flex: 1; min-width: 300px; }
+
+.download-btn {
+    display: inline-block; margin-top: 20px; padding: 15px 30px;
+    background: var(--accent-red); color: #000; text-decoration: none;
+    font-family: var(--font-mono); font-size: 1.5rem; font-weight: bold;
+    border: 1px solid #fff; transition: 0.3s;
+}
+.download-btn:hover {
+    background: #fff; color: var(--accent-red); box-shadow: 0 0 15px var(--accent-red);
+}
+
+/* Modal Secreto */
+#modal-secret {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; z-index: var(--z-secret);
+    justify-content: center; align-items: center;
+    text-align: center; color: red; font-family: var(--font-mono);
+}
+#modal-secret.active { display: flex; }
+.secret-content h1 { font-size: 5rem; animation: blink 0.1s infinite; }
+
+/* Overlay SENREF (Gobierno/Azul) */
+#senref-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #000080; color: #fff; z-index: var(--z-overlay);
+    flex-direction: column; justify-content: center; align-items: center;
+    font-family: var(--font-main); padding: 20px; box-sizing: border-box;
+    text-align: center; border: 20px solid #fff;
+}
+
+.senref-badge {
+    border: 3px solid #fff; padding: 10px 30px; font-size: 3rem;
+    font-weight: bold; margin-bottom: 20px; letter-spacing: 5px; background: #000;
+}
+.senref-text { font-size: 1.5rem; max-width: 800px; line-height: 1.6; }
+.entity-corruption {
+    color: red !important; text-shadow: 2px 2px 0px #000;
+    font-family: var(--font-glitch) !important; animation: intense-shake 0.1s infinite;
+}
+
+/* =========================================
+   10. ESTADOS ESPECIALES (CURSED MODE)
+   ========================================= */
+body.cursed-mode {
+    filter: sepia(1) hue-rotate(-50deg) contrast(1.5) saturate(2);
+    animation: intense-shake 0.2s infinite;
+}
+
+body.cursed-mode .scanlines {
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 0, 0, 0.2),
+        rgba(255, 0, 0, 0.2) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+}
+
+/* Apagón Final */
+#blackout-screen {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; z-index: var(--z-blackout);
+}
+
+/* =========================================
+   11. ANIMACIONES Y KEYFRAMES
+   ========================================= */
 @keyframes glitch-anim {
     0% { clip-path: inset(40% 0 61% 0); }
     20% { clip-path: inset(92% 0 1% 0); }
@@ -179,285 +596,13 @@ h2.section-header::after { content: '_'; animation: blink 0.8s infinite; }
 
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-footer {
-    text-align: center; padding: 50px; font-size: 0.8rem;
-    color: #555; font-family: 'VT323';
-}
-
-/* --- VENTANAS MODALES (POP-UPS) --- */
-.modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.9); /* Fondo casi negro */
-    z-index: 2000; /* Por encima de todo */
-    display: none; /* Oculto por defecto */
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(5px);
-}
-
-/* Efecto de aparición */
-.modal-overlay.active {
-    display: flex;
-    animation: openWindow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-.modal-window {
-    background: #050505;
-    border: 2px solid var(--accent-red);
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto; /* Scroll si es muy largo */
-    box-shadow: 0 0 30px var(--accent-red), inset 0 0 20px rgba(255,0,0,0.1);
-    position: relative;
-    padding: 2px; /* Espacio para el borde doble */
-}
-
-/* Header de la ventana */
-.modal-header {
-    background: var(--dark-red);
-    color: #fff;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--accent-red);
-    font-family: 'VT323', monospace;
-    font-size: 1.5rem;
-}
-
-.close-btn {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-size: 1.5rem;
-    cursor: pointer;
-    font-family: 'VT323';
-}
-.close-btn:hover { color: var(--accent-red); }
-
-/* Contenido interno */
-.modal-body {
-    padding: 30px;
-    font-family: 'Special Elite', cursive;
-}
-
-.modal-grid {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-}
-
-.modal-img {
-    flex: 1;
-    min-width: 300px;
-}
-.modal-img img {
-    width: 100%;
-    border: 1px solid #333;
-    filter: sepia(0.5);
-}
-
-.modal-info {
-    flex: 1;
-    min-width: 300px;
-}
-
-.download-btn {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 15px 30px;
-    background: var(--accent-red);
-    color: #000;
-    text-decoration: none;
-    font-family: 'VT323';
-    font-size: 1.5rem;
-    font-weight: bold;
-    border: 1px solid #fff;
-    transition: 0.3s;
-}
-.download-btn:hover {
-    background: #fff;
-    color: var(--accent-red);
-    box-shadow: 0 0 15px var(--accent-red);
-}
-
 @keyframes openWindow {
     0% { transform: scaleY(0); opacity: 0; }
     100% { transform: scaleY(1); opacity: 1; }
 }
-.classified-folder {
-    border: 1px dashed #444;
-    padding: 20px;
-    background: repeating-linear-gradient(
-        45deg,
-        #0a0a0a,
-        #0a0a0a 10px,
-        #111 10px,
-        #111 20px
-    );
-    position: relative;
-}
 
-.classified-stamp {
-    position: absolute;
-    top: 10px; right: 10px;
-    border: 2px solid var(--accent-red);
-    color: var(--accent-red);
-    padding: 5px 10px;
-    font-family: 'VT323';
-    font-size: 1.5rem;
-    transform: rotate(15deg);
-    opacity: 0.7;
-    pointer-events: none;
-}
-
-/* Efecto de texto censurado (Redacted) */
-.redacted {
-    background: #000;
-    color: #000;
-    user-select: none; /* No se puede seleccionar */
-    cursor: help;
-}
-.redacted:hover {
-    color: #333; /* Pequeña pista al pasar el mouse */
-}
-
-/* 2. SECCIÓN CONTACTO Y REDES */
-.social-links {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-}
-
-.social-btn {
-    color: #888;
-    font-size: 2.5rem;
-    transition: 0.3s;
-    text-decoration: none;
-}
-
-.social-btn:hover {
-    color: #fff;
-    text-shadow: 2px 2px var(--accent-red), -2px -2px var(--accent-cyan);
-    transform: scale(1.2) rotate(-5deg);
-}
-
-/* Botón de copiar correo */
-.copy-email-box {
-    text-align: center;
-    margin: 40px auto;
-    max-width: 600px;
-    border: 1px solid #333;
-    padding: 30px;
-    background: rgba(10, 0, 0, 0.5);
-}
-
-.copy-btn {
-    background: var(--dark-red);
-    color: #fff;
-    border: 1px solid var(--accent-red);
-    padding: 10px 20px;
-    font-family: 'VT323';
-    font-size: 1.5rem;
-    cursor: pointer;
-    margin-top: 15px;
-    transition: 0.2s;
-}
-
-.copy-btn:hover {
-    background: var(--accent-red);
-    box-shadow: 0 0 15px var(--accent-red);
-}
-
-/* Notificación Flotante (Toast) */
-#copy-toast {
-    visibility: hidden;
-    min-width: 250px;
-    background-color: #111;
-    color: var(--accent-cyan);
-    text-align: center;
-    border: 1px solid var(--accent-cyan);
-    padding: 16px;
-    position: fixed;
-    z-index: 3000;
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%);
-    font-family: 'VT323';
-    font-size: 1.2rem;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-}
-
-#copy-toast.show {
-    visibility: visible;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;
-}
-
-@keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
-}
-
-@keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
-}
-.system-signature {
-    margin-top: 15px;
-    font-family: 'VT323', monospace;
-    font-size: 1.1rem;
-    color: #555; /* Color oscuro para que no distraiga demasiado */
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    display: inline-block;
-    padding: 5px 10px;
-    border: 1px solid transparent;
-    transition: 0.3s;
-}
-
-.system-signature:hover {
-    border: 1px dashed #333;
-    background: rgba(0, 255, 255, 0.05); /* Fondo cian muy sutil */
-    color: #888;
-}
-
-.creator-name {
-    color: var(--accent-cyan); /* Tu nombre en Cian */
-    font-weight: bold;
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
-    cursor: help; /* Cambia el cursor para indicar misterio */
-    position: relative;
-}
-
-.creator-name:hover {
-    text-shadow: 2px 0 var(--accent-red), -2px 0 blue; /* Efecto Glitch al pasar el mouse */
-    animation: glitch-anim 0.2s infinite;
-}
-
-/* El cursor parpadeante al final */
-.cursor-blink {
-    color: var(--accent-cyan);
-    animation: blink 1s step-end infinite;
-}
-
-body.cursed-mode {
-    filter: sepia(1) hue-rotate(-50deg) contrast(1.5) saturate(2); /* Todo se vuelve ROJO SANGRE */
-    animation: intense-shake 0.2s infinite; /* Tiembla todo */
-}
-
-body.cursed-mode .scanlines {
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(255, 0, 0, 0.2),
-        rgba(255, 0, 0, 0.2) 1px,
-        transparent 1px,
-        transparent 2px
-    );
-}
+@keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+@keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
 @keyframes intense-shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }
@@ -473,284 +618,19 @@ body.cursed-mode .scanlines {
     100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 
-/* Modal del Secreto */
-#modal-secret {
-    display: none; /* Oculto siempre */
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: #000;
-    z-index: 5000;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: red;
-    font-family: 'VT323';
-}
-
-#modal-secret.active {
-    display: flex;
-}
-
-.secret-content h1 {
-    font-size: 5rem;
-    animation: blink 0.1s infinite;
-}
-
-#senref-overlay {
-    display: none; /* Oculto */
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-color: #000080; /* Azul "Pantalla Azul" o Gobierno */
-    color: #fff;
-    z-index: 9999;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Special Elite', monospace; /* Fuente mecanografiada */
-    padding: 20px;
-    box-sizing: border-box;
-    text-align: center;
-    border: 20px solid #fff; /* Marco grueso */
-}
-
-/* El logo de SENREF (Texto en recuadro) */
-.senref-badge {
-    border: 3px solid #fff;
-    padding: 10px 30px;
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    letter-spacing: 5px;
-    background: #000;
-}
-
-/* Texto del aviso */
-.senref-text {
-    font-size: 1.5rem;
-    max-width: 800px;
-    line-height: 1.6;
-}
-
-/* Animación de Glitch para el texto cuando entra el Ente */
-.entity-corruption {
-    color: red !important;
-    text-shadow: 2px 2px 0px #000;
-    font-family: 'Rubik Glitch', cursive !important;
-    animation: intense-shake 0.1s infinite;
-}
-
-/* Pantalla Negra Final (Apagón) */
-#blackout-screen {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: #000;
-    z-index: 10000; /* Por encima de todo */
-}
-/* Rastro del Mouse */
-.cursor-trail {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    background-color: var(--accent-red);
-    border-radius: 50%;
-    pointer-events: none; /* Para que no interfiera con los clicks */
-    z-index: 9999;
-    opacity: 0.7;
-    animation: fadeTrail 0.5s forwards;
-    box-shadow: 0 0 10px var(--accent-red);
+@keyframes color-shift {
+    0% { filter: hue-rotate(0deg) contrast(1); }
+    100% { filter: hue-rotate(45deg) contrast(2) sepia(1); }
 }
 
 @keyframes fadeTrail {
     0% { transform: scale(1); opacity: 0.7; }
     100% { transform: scale(0); opacity: 0; }
 }
-::selection {
-    background: var(--accent-red); /* Fondo Rojo al seleccionar */
-    color: #000; /* Texto negro */
-    text-shadow: none;
-}
-
-
-/* --- EASTER EGG: PANTALLA DE INICIO POSEÍDA --- */
-#start-screen.possessed {
-  
-    animation: intense-shake 0.1s infinite, color-shift 0.2s infinite alternate;
-    background: #1a0000 !important; /* Fondo rojizo oscuro */
-}
-
-@keyframes color-shift {
-    0% { filter: hue-rotate(0deg) contrast(1); }
-    100% { filter: hue-rotate(45deg) contrast(2) sepia(1); }
-}
-
-/* Estilo del texto final */
-.possessed-text h1 {
-    font-family: 'Rubik Glitch', cursive !important;
-    color: red !important;
-    font-size: 3rem !important;
-    text-shadow: 0 0 20px red, 0 0 40px black;
-    text-transform: uppercase;
-    animation: blink 0.1s infinite !important; /* Parpadeo muy rápido */
-    max-width: 80%;
-    text-align: center;
-}
-
-/* --- BLOG CONFIDENCIAL (PATREON LOCK) --- */
-.classified-section {
-    position: relative;
-    border: 2px dashed #444;
-    padding: 20px;
-    margin: 40px 0;
-    background: #080808;
-}
-
-/* El contenido real (oculto/borroso al principio) */
-.secret-content-area {
-    filter: blur(10px) grayscale(100%);
-    pointer-events: none; /* No se puede clickear ni copiar */
-    user-select: none;
-    transition: 2s; /* Efecto dramático al desbloquear */
-    opacity: 0.5;
-}
-
-/* Cuando se desbloquea */
-.secret-content-area.unlocked {
-    filter: blur(0) grayscale(0);
-    pointer-events: all;
-    user-select: text;
-    opacity: 1;
-}
-
-/* La capa de seguridad encima */
-.security-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.7);
-}
-
-.security-box {
-    background: #000;
-    border: 1px solid var(--accent-red);
-    padding: 30px;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-}
-
-.pass-input {
-    background: #111;
-    border: 1px solid #444;
-    color: var(--accent-cyan);
-    padding: 10px;
-    font-family: 'VT323';
-    font-size: 1.5rem;
-    text-align: center;
-    text-transform: uppercase;
-    margin-top: 10px;
-    width: 200px;
-}
-
-.unlock-btn {
-    background: var(--dark-red);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-family: 'VT323';
-    font-size: 1.2rem;
-    cursor: pointer;
-    margin-top: 10px;
-    border: 1px solid var(--accent-red);
-}
-
-.unlock-btn:hover {
-    background: red;
-    box-shadow: 0 0 10px red;
-}
-
-/* Estado inicial: Borroso y no se puede clickear */
-#secret-area {
-    filter: blur(10px); 
-    pointer-events: none; /* Para que no puedan copiar el texto mientras está borroso */
-    user-select: none;
-    transition: filter 0.8s ease; /* Transición suave al desbloquear */
-}
-
-/* Estado desbloqueado: Se ve nítido */
-#secret-area.unlocked {
-    filter: blur(0);
-    pointer-events: auto;
-    user-select: auto;
-}
-.vignette {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* CRUCIAL: Permite clics a través de la sombra */
-    z-index: 500; /* Por encima del contenido, por debajo de los modales */
-    
-    /* El truco visual: Transparente al centro (50%), Negro casi sólido en las esquinas */
-    background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 120%);
-    
-    /* Animación de respiración lenta */
-    animation: breathe 6s infinite alternate ease-in-out;
-}
 
 @keyframes breathe {
-    0% {
-        opacity: 0.6;
-        background: radial-gradient(circle, transparent 45%, rgba(0,0,0,0.7) 120%);
-    }
-    100% {
-        opacity: 1;
-        background: radial-gradient(circle, transparent 35%, rgba(0,0,0,0.95) 110%);
-    }
-}
-/* --- ESTILOS DEL TERMINAL DISCORD --- */
-
-.discord-terminal {
-    --discord-color: #5865F2;
-    --terminal-bg: rgba(88, 101, 242, 0.05);
-    
-    border: 1px dashed var(--discord-color);
-    background: var(--terminal-bg);
-    margin: 30px auto;
-    max-width: 600px;
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.discord-terminal:hover {
-    box-shadow: 0 0 15px rgba(88, 101, 242, 0.3);
-    border-style: solid;
-}
-
-/* Cabecera del terminal (La barra superior) */
-.terminal-header {
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom: 1px solid var(--discord-color);
-    padding: 8px 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'VT323', monospace;
-    font-size: 1rem;
-    color: var(--discord-color);
-    letter-spacing: 1px;
-}
-
-/* Animación del punto de señal */
-.signal-dot {
-    color: #ff3333; /* Rojo para grabar/señal */
-    animation: signal-blink 1.5s infinite;
+    0% { opacity: 0.6; background: radial-gradient(circle, transparent 45%, rgba(0,0,0,0.7) 120%); }
+    100% { opacity: 1; background: radial-gradient(circle, transparent 35%, rgba(0,0,0,0.95) 110%); }
 }
 
 @keyframes signal-blink {
@@ -758,70 +638,3 @@ body.cursed-mode .scanlines {
     50% { opacity: 0.3; text-shadow: none; }
     100% { opacity: 1; text-shadow: 0 0 5px red; }
 }
-
-/* Cuerpo del contenido */
-.terminal-content {
-    padding: 20px;
-    text-align: center;
-}
-
-.terminal-title {
-    font-family: 'Rubik Glitch', cursive; /* O VT323 si prefieres más limpio */
-    color: #fff;
-    font-size: 1.8rem;
-    margin: 0 0 10px 0;
-    text-shadow: 2px 2px 0px var(--discord-color);
-}
-
-.terminal-desc {
-    font-family: 'Special Elite', cursive;
-    color: #ccc;
-    font-size: 0.95rem;
-    margin-bottom: 25px;
-    line-height: 1.4;
-}
-
-/* Botón de llamada a la acción (CTA) */
-.discord-cta {
-    display: inline-block;
-    text-decoration: none;
-    font-family: 'VT323', monospace;
-    font-size: 1.4rem;
-    color: var(--discord-color);
-    transition: all 0.3s ease;
-    padding: 5px 10px;
-}
-
-.discord-cta .bracket {
-    color: #fff;
-    transition: margin 0.3s ease;
-}
-
-.discord-cta:hover {
-    background: var(--discord-color);
-    color: #000;
-    box-shadow: 0 0 10px var(--discord-color);
-}
-
-.discord-cta:hover .bracket {
-    color: #000;
-    margin: 0 5px; /* Efecto de expansión al pasar el mouse */
-}
-
-/* Decoración opcional (Scanline interna) */
-.scanline-decoration {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.1) 51%);
-    background-size: 100% 4px;
-    pointer-events: none;
-    opacity: 0.5;
-    z-index: 1;
-}
-
-
-/* Ocultar el subtítulo normal cuando se posee */
-.possessed-text p { display: none !important; }
