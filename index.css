@@ -638,3 +638,81 @@ body.cursed-mode .scanlines {
     50% { opacity: 0.3; text-shadow: none; }
     100% { opacity: 1; text-shadow: 0 0 5px red; }
 }
+/* =========================================
+   12. ADAPTABILIDAD MÓVIL (RESPONSIVE)
+   ========================================= */
+@media screen and (max-width: 768px) {
+    
+    /* 1. Ajustar el Título Gigante */
+    .main-title {
+        font-size: 3rem; /* Reduce de 6rem a 3rem */
+        letter-spacing: 2px;
+        line-height: 1.1;
+    }
+
+    /* 2. Ajustar la Navegación */
+    .glitch-nav {
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .nav-btn {
+        font-size: 1.1rem; /* Botones más pequeños */
+    }
+
+    /* 3. Márgenes y Espacios */
+    section {
+        margin: 30px auto; /* Menos espacio entre secciones */
+        padding: 0 15px;
+    }
+
+    h2.section-header {
+        font-size: 2rem;
+    }
+
+    /* 4. Ajustes de la Ventana Modal (Pop-up) */
+    .modal-window {
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .modal-grid {
+        flex-direction: column; /* Pone la imagen arriba y texto abajo */
+        gap: 15px;
+    }
+
+    .modal-img, .modal-info {
+        min-width: 100%; /* Ocupan todo el ancho disponible */
+    }
+
+    .modal-img img {
+        height: auto; /* Altura automática */
+        max-height: 200px; /* Para que no ocupe toda la pantalla */
+    }
+    
+    /* 5. Ajustes de la Pantalla de Gobierno (Senref) */
+    .senref-badge {
+        font-size: 1.8rem;
+        padding: 5px 15px;
+        border: 2px solid #fff;
+    }
+    
+    #senref-overlay {
+        border: 5px solid #fff; /* Borde más fino */
+        padding: 10px;
+    }
+
+    .senref-text {
+        font-size: 1rem;
+    }
+    
+    /* 6. Ajustes de Terminal Discord */
+    .discord-terminal {
+        width: 95%;
+        margin: 20px auto;
+    }
+    
+    .terminal-title {
+        font-size: 1.4rem;
+    }
+}
