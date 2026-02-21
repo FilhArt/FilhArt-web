@@ -1,462 +1,193 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FilhArt Studio - Horror Indie</title>
-    <link rel="icon" href="Media/FILHART.png" type="image/png">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Rubik+Glitch&family=Special+Elite&family=VT323&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link rel="stylesheet" href="index.css">
+    <title>IN.CÓGNITO</title>
+    <link rel="icon" type="image/png" href="IMG/IN.COGNITO LOGO.png">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 <body>
 
-    <div id="copy-toast">>> FRECUENCIA DE CORREO COPIADA AL PORTAPAPELES</div>
-
-    <div id="start-screen">
-        <h1>[ CLICK PARA INICIAR SISTEMA ]</h1>
-        <p>ADVERTENCIA: CONTENIDO INESTABLE</p>
+<div id="bootScreen" class="boot-screen">
+    <div id="bootText" class="boot-text"></div>
+</div>
+    
+<div class="terminal">
+    <div class="header">
+        <div class="header-left">
+            <span class="title">IN.CÓGNITO</span>
+            <button id="adminLogout" class="btn-logout hidden" data-i18n="btn_admin_logout">EXIT ADMIN</button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button id="langToggle" onclick="switchLanguage()" style="background: transparent; border: 1px solid #0f0; color: #0f0; padding: 2px 8px; font-family: monospace; cursor:pointer;" data-i18n="lang_btn">[ LANG: ES ]</button>
+            <span class="status" data-i18n="system_status">[SYSTEM ACTIVE]</span>
+        </div>
     </div>
 
-    <div id="boot-sequence" style="display:none;">
-        <div id="boot-text"></div>
+    <div class="divider"></div>
+    <div class="live-wire-container">
+        <div class="live-wire-track" id="liveWireTrack"></div>
+     </div>
+    
+    <div class="logo-container">
+        <img src="IMG/IN.COGNITO LOGO.png" alt="LOGO" class="logo">
     </div>
 
-    <div class="crt-container" id="main-content">
-        <div class="scanlines"></div>
-        <div class="vignette"></div>
+    <div class="content" id="homeScreen">
+        <p class="warning" data-i18n="home_warning">YOU ARE NOT SUPPOSED TO BE HERE.</p>
+        <p class="info" data-i18n="home_info">This system contains unverified records.</p>
+        <div class="actions">
+            <button class="btn" id="accessBtn" data-i18n="nav_archive">ACCESS ARCHIVE</button>
+            <button class="btn" id="submitBtn" data-i18n="nav_submit">SUBMIT RECORD</button>
+        </div>
+        <div class="log hidden" id="systemLog"></div>
+        <p class="watching" data-i18n="home_watching">— SYSTEM WATCHING —</p>
+    </div>
 
-        <header>
-            <div class="glitch-wrapper">
-                <h1 class="main-title" id="main-logo" data-text="FILHART" onclick="triggerTitleEasterEgg()">FILHART</h1>
+    <div class="content hidden" id="submitScreen">
+        <div class="submit-title" data-i18n="form_main_title">SUBMIT EVIDENCE</div>
+        
+        <label class="submit-label" data-i18n="form_lbl_title">RECORD TITLE</label>
+        <input class="submit-input" id="inTitle" type="text" placeholder="Untitled file" data-i18n="form_ph_title">
+
+        <label class="submit-label" data-i18n="form_lbl_cat">CLASSIFICATION</label>
+        <select id="inCategory" class="submit-input" style="background: black; color: #0f0; cursor: pointer;">
+            <option value="ALIEN" data-i18n="cat_alien">EXTRATERRESTRE</option>
+            <option value="PARANORMAL" data-i18n="cat_para">PARANORMAL</option>
+            <option value="CRYPTID" data-i18n="cat_cryptid">CRÍPTIDO</option>
+            <option value="SOCIETY" data-i18n="cat_society">SOCIEDAD SECRETA</option>
+            <option value="URBAN_LEGEND" data-i18n="cat_urban">LEYENDA URBANA</option>
+            <option value="GOVERNMENT" data-i18n="cat_govt">GUBERNAMENTAL</option>
+            <option value="OTHER" data-i18n="cat_other">DESCONOCIDO</option>
+        </select>
+
+        <label class="submit-label" data-i18n="form_lbl_desc">DESCRIPTION / CONSPIRACY</label>
+        
+        <div class="polygraph-container">
+            <div class="polygraph-header">[SISTEMA DE ANÁLISIS BIOMÉTRICO MK-II]</div>
+            <div class="polygraph-stats">
+                <span>RITMO CARDÍACO: <span id="bpm-readout">72</span> BPM</span>
+                <span>ESTADO: <span id="polygraph-status" class="status-normal">ESTABLE</span></span>
             </div>
-            <div class="subtitle">ESTUDIO DE DESARROLLO INDEPENDIENTE</div>
-        </header>
+            <div class="polygraph-bar-bg">
+                <div id="polygraph-bar" class="polygraph-bar-fill"></div>
+            </div>
+            <div id="polygraph-warning" class="polygraph-warning" data-i18n="polygraph_warning">VIGILANCIA ACTIVA: ESCRIBA SU REPORTE.</div>
+        </div>
+        <textarea class="submit-textarea" id="inDesc" placeholder="Write the record..." data-i18n="form_ph_desc"></textarea>
 
-        <nav class="glitch-nav">
-            <button class="nav-btn" onclick="scrollToId('juegos')">Juegos</button>
-            <button class="nav-btn" onclick="scrollToId('futuro')">Archivos sin resolver</button>
-            <button class="nav-btn" onclick="scrollToId('qa')">Preguntas</button>
-            <button class="nav-btn" onclick="scrollToId('estudio')">Estudio</button>
-            <button class="nav-btn" onclick="scrollToId('blog-secreto')">Patreon</button>
-            <button class="nav-btn" onclick="scrollToId('contacto')">Contacto</button>
-        </nav>
+        <label class="submit-label" data-i18n="form_lbl_img">EVIDENCE (PHOTO/IMAGE)</label>
+        <input type="file" id="inImage" accept="image/*" class="submit-input">
 
-        <main>
-            <section id="juegos">
-                <h2 class="section-header">CATALOGO_DE_TERROR</h2>
-                <div class="games-grid">
-                    
-                    <div class="game-card hover-trigger" onclick="openModal('modal-senref')">
-                        <img src="Media/SENREFLOGO.png" alt="Senref" class="card-thumb">
-                        <div class="game-info">
-                            <h3>SENREF</h3>
-                            <p style="font-size: 0.8rem; color: #888;">[ CLICK PARA ACCEDER AL ARCHIVO ]</p>
-                        </div>
-                    </div>
+        <label class="submit-label" data-i18n="form_lbl_source">SOURCE / ACCESS KEY (OPTIONAL)</label>
+        <input class="submit-input" id="inSource" type="text" placeholder="Unknown / Anonymous" data-i18n="form_ph_source">
 
-                    <div class="game-card hover-trigger" onclick="openModal('modal-legend')">
-                        <img src="https://placehold.co/600x400/001a00/FFF?text=VERMIN´S&RISE=roboto" alt="The Legend">
-                        <div class="game-info">
-                            <h3>VERMIN´S RISE</h3>
-                            <p style="font-size: 0.8rem; color: #888;">[ CLICK PARA ACCEDER AL ARCHIVO ]</p>
-                        </div>
-                    </div>
+        <div class="submit-actions">
+            <button class="btn" id="sendRecordBtn" data-i18n="btn_submit">TRANSMIT</button>
+            <button class="btn" id="cancelBtn" data-i18n="btn_abort">ABORT</button>
+        </div>
+    </div>
 
-                    <div class="game-card hover-trigger" onclick="openModal('modal-iwafy')">
-                        <img src="Media/Icon-IWAFY.png" alt="I Will Always Find You">
-                        <div class="game-info">
-                            <h3>I Will Always Find You</h3>
-                            <p style="font-size: 0.8rem; color: #888;">[ CLICK PARA ACCEDER AL ARCHIVO ]</p>
-                        </div>
-                    </div>
+    <div class="content hidden" id="archiveScreen">
+        <div class="archive-header" data-i18n="archive_title">SECURE ARCHIVE</div>
 
-                </div>
-            </section>
+        <div class="search-container">
+            <span class="search-icon">🔎</span>
+            <input type="text" id="deepScanInput" placeholder="DEEP SCAN (TITLE/DESC)..." class="submit-input" style="border:none; margin:0;" data-i18n="ph_search">
+        </div>
 
-            <section id="futuro">
-                <h2 class="section-header">ARCHIVOS_SIN_RESOLVER</h2>
-                <div class="games-grid">
-                    
-                    <div class="classified-folder hover-trigger">
-                        <div class="classified-stamp">CONFIDENCIAL</div>
-                        <h3 style="font-family: 'VT323'; font-size: 2rem; margin-top:0;">PROYECTO: SUNKEN FEELING</h3>
-                        <p><strong>Sujeto:</strong> Detective <span class="redacted">Maebe</span></p>
-                        <p><strong>Estado:</strong> Idea Concept</p>
-                        <p style="line-height: 1.6;">
-                            El sujeto abordó buscando gloria. El tren nunca llegó a su destino. 
-                            Última ubicación conocida: <span class="redacted">El Bosque de las Tumbas</span>. 
-                            Rescate reporta a alguien herido entre la niebla, pero la niebla... <span class="redacted">tiene ojos</span>.
-                        </p>
-                    </div>
+       <div class="category-filters" id="categoryFilters">
+            <button class="filter-btn active" data-cat="ALL" data-i18n="filter_all">ALL</button>
+            <button class="filter-btn" data-cat="ALIEN">ALIEN</button>
+            <button class="filter-btn" data-cat="PARANORMAL">PARA.</button>
+            <button class="filter-btn" data-cat="CRYPTID">CRYPT.</button>
+            <button class="filter-btn" data-cat="SOCIETY" data-i18n="cat_society_short">SOCIEDAD</button>
+            <button class="filter-btn" data-cat="URBAN_LEGEND" data-i18n="cat_urban_short">LEYENDA</button>
+            <button class="filter-btn" data-cat="GOVERNMENT">GOVT.</button>
+            <button class="filter-btn" data-cat="OTHER" data-i18n="cat_other_short">OTHER</button>
+        </div>
 
-                    <div class="classified-folder hover-trigger">
-                        <div class="classified-stamp">CONFIDENCIAL</div>
-                        <h3 style="font-family: 'VT323'; font-size: 2rem; margin-top:0;">
-                            PROYECTO: FUERA DE RUTA <span class="redacted">ARCHIVO INCOMPLETO</span>
-                        </h3>
-                        <p><strong>Estado:</strong> Juego en desarrollo temprano</p>
-                        <p style="line-height: 1.6;">
-                            <em>
-                                El sujeto tomó una ruta alternativa para evitar retrasos. 
-                                Transportaba una suma considerable de dinero con destino a un 
-                                <span class="redacted">centro médico</span>.
-                            </em> 
-                            <br><br>
-                            Tras el fallo del vehículo, se reportan episodios de 
-                            <span class="redacted">alucinaciones persistentes</span>, 
-                            interferencia tecnológica y una fuerte sensación de vigilancia.
-                            <br><br>
-                            El área parece reaccionar a estados emocionales extremos.
-                            Se sospecha la presencia de una entidad que se alimenta de 
-                            <span class="redacted">dolor, angustia y culpa</span>.
-                        </p>
-                    </div>
+        <div id="archiveList" class="archive-list">
+            </div>
 
-                    <div class="classified-folder hover-trigger">
-                        <div class="classified-stamp">CONFIDENCIAL</div>
-                        <h3 style="font-family: 'VT323'; font-size: 2rem; margin-top:0;">
-                            PROYECTO: UNREMEMBERED
-                        </h3>
-                        <p><strong>Estado:</strong> Fase de concepto</p>
-                        <p style="line-height: 1.6;">
-                            <em>
-                                El sujeto no murió. Fue 
-                            </em>
-                            <span class="redacted">eliminado de la percepción</span>.
-                            <em>
-                                La familia continúa con su rutina. El entorno permanece estable.
-                            </em>
-                            <br><br>
-                            <em>
-                                El problema no es la desaparición, sino 
-                            </em>
-                            <span class="redacted">seguir consciente mientras el mundo finge que nunca estuviste aquí</span>.
-                            <br><br>
-                            <em>
-                                La entidad designada como 
-                            </em>
-                            <span class="redacted">EL PEÓN</span>
-                            <em>
-                                no persigue ni ataca. Su función es 
-                            </em>
-                            <span class="redacted">borrar antes del contacto</span>.
-                            <br><br>
-                            <strong>ADVERTENCIA:</strong>
-                            <em>
-                                La observación prolongada deja rastros.
-                                El uso de dispositivos luminosos puede 
-                            </em>
-                            <span class="redacted">facilitar la detección</span>.
-                        </p>
-                    </div>
+        <div class="actions" style="margin-top: 20px;">
+            <button class="btn" id="backBtn" data-i18n="btn_return">RETURN TO HOME</button>
+        </div>
+    </div>
 
-                </div>
-            </section>
+    <div id="customAlert" class="custom-modal hidden">
+        <div class="modal-content">
+            <div id="alertMsg">SYSTEM MESSAGE</div>
+            <button class="btn small" id="closeAlert" data-i18n="alert_continue">CONTINUE</button>
+        </div>
+    </div>
 
-            <section id="qa">
-                <h2 class="section-header">INTERROGATORIO</h2>
-                <details style="margin-bottom: 10px; cursor: pointer;">
-                    <summary style="color: #aaa; font-family: 'VT323'; font-size: 1.3rem;">¿Subirán SENREF a Steam?</summary>
-                    <p style="padding-left: 20px; color: var(--accent-red);">FLOKO: Porsupuerto, estamos intentando obtener financiamiento, para poder costearlo.</p>
-                </details>
-                <details style="margin-bottom: 10px; cursor: pointer;">
-                    <summary style="color: #aaa; font-family: 'VT323'; font-size: 1.3rem;">¿Piensan terminar SENREF?</summary>
-                    <p style="padding-left: 20px; color: var(--accent-red);">FLOKO: Es la idea, actualmente estamos trabajando en la demo, una version mejorada y mas larga, con muchas sorpresas y mejorar.</p>
-                </details>
-                 <details style="margin-bottom: 10px; cursor: pointer;">
-                    <summary style="color: #aaa; font-family: 'VT323'; font-size: 1.3rem;">¿Tienen pensado otros juegos a futuro?</summary>
-                    <p style="padding-left: 20px; color: var(--accent-red);">FLOKO: Claro, actualmente tambien estamos trabajando en juegos que puedan jugarse online, asi como tambien estamos trabajando en el guión de nuestro proximo juego de terror.</p>
-                </details>
-            </section>
+    <div id="customConfirm" class="custom-modal hidden">
+        <div class="modal-content">
+            <div id="confirmMsg" data-i18n="confirm_sure">ARE YOU SURE?</div>
+            <div class="submit-actions">
+                <button class="btn small danger" id="confirmYes" data-i18n="confirm_yes">PROCEED</button>
+                <button class="btn small" id="confirmNo" data-i18n="confirm_no">ABORT</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="adminPanel" class="admin-panel hidden">
+    <div class="admin-panel-header">ESTACIÓN DE MONITOREO CENTRAL</div>
+    <div class="admin-stats">
+        <div class="stat-box">
+            <span class="label">REGISTROS EN NUBE</span>
+            <span id="totalRecords" class="value">0</span>
+        </div>
+        <div class="stat-box">
+            <span class="label">ESTADO DE RED</span>
+            <span class="value ok">EN LÍNEA</span>
+        </div>
+    </div>
+    <div class="admin-actions">
+        <button class="btn small danger" id="nukeDatabase">NUKE DATABASE (BORRAR TODO)</button>
+    </div>
+</div>
 
-            <section id="estudio">
-                <h2 class="section-header">NOSOTROS</h2>
-                <div class="hover-trigger" onclick="openModal('modal-estudio')" style="cursor: pointer;">
-                    <div style="display: flex; gap: 40px; align-items: center; flex-wrap: wrap; justify-content: center;">
-                        
-                        <div style="flex: 1; min-width: 300px;">
-                            <p>Desde los bosques del sur y Santiago, tres creadores, reunidos por los azares de un curso online de la universidad
-                                 <span style="color: var(--accent-red)">Floko, Noah y Eldryc</span> se juntaron con un objetivo en común, crear algo en conjunto, un proyecto de videojuego
-                                 a medio hacer y fantasear con terminarlo por completo para sacarlo en steam..</p>
-                            <p>Esa llama de creatividad perduró y dio origen a<strong> FilhArt</strong>,  la condensación de todos nuestros esfuerzos manifestada como una organización indie de amigos con objetivos y motivos claros, contar historias únicas, a
-                                 nuestra manera, y de nuestra forma con un claro
-                                 foco en el  <strong>terror</strong>, el detalle y las referencias.</p>
-                            <p style="color: var(--accent-cyan); margin-top: 20px; font-family: 'VT323'; font-size: 1.2rem;">> CLICK PARA VER FICHA DEL EQUIPO</p>
-                        </div>
+<template id="cardTemplate">
+    <div class="archive-card" data-open="false">
+        <div class="card-image-container">
+             <img src="" class="evidence-preview hidden">
+             <span class="placeholder-icon">👁</span>
+        </div>
+        <div class="card-content">
+            <div class="card-title"></div>
+            <div class="card-preview"></div>
+            
+            <div class="card-reactions">
+                <button class="react-btn believe-btn" title="PLAUSIBLE">
+                    <span class="icon">👁</span> <span class="count">0</span>
+                </button>
+                <button class="react-btn redacted-btn" title="DISINFORMATION">
+                    <span class="icon">🚫</span> <span class="count">0</span>
+                </button>
+            </div>
 
-                        <div style="flex: 0 0 300px; text-align: center; position: relative;">
-                            <div style="border: 2px solid #333; padding: 10px; background: rgba(0,0,0,0.5);">
-                                <img src="Media/FILHART.png" 
-                                     alt="Logo FilhArt" 
-                                     style="width: 100%; display: block; filter: drop-shadow(0 0 10px var(--accent-red)); opacity: 0.9;">
-                            </div>
-                            <div style="position: absolute; bottom: -20px; right: -20px; color: #333; font-family: 'Rubik Glitch'; font-size: 4rem; z-index: -1; opacity: 0.3;">
-                                FH
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
-
-            <section id="blog-secreto">
-                <h2 class="section-header">SENREF... Donde todo empezó.(muy pronto)</h2>
+            <div class="record-expanded hidden">
+                <img src="" class="full-evidence-img hidden">
+                <p class="full-desc"></p>
+                <p class="record-source"></p>
                 
-                <div class="classified-section" id="security-wrapper">
-                    <div class="security-overlay" id="overlay-lock">
-                        <div class="security-box">
-                            <i class="fas fa-lock" style="font-size: 3rem; color: var(--accent-red); margin-bottom: 10px;"></i>
-                            <h3 style="font-family: 'VT323'; color: var(--accent-red); margin: 0;">ACCESO RESTRINGIDO</h3>
-                            <p style="font-size: 0.9rem; color: #aaa;">CONTENIDO EXCLUSIVO PARA PATREONS</p>
-                            <p style="font-size: 0.8rem; color: #666;">Introduce la clave mensual:</p>
-                            
-                            <input type="text" id="patreon-pass" placeholder="CLAVE..." autocomplete="off">
-                            <br>
-                            <button class="unlock-btn" onclick="checkPatreonPass()">DESENCRIPTAR</button>
-                            <p id="error-msg" style="color: red; display: none; margin-top: 5px; font-family: 'VT323';">CLAVE INCORRECTA</p>
-                        </div>
-                    </div>
-
-                    <div class="secret-content-area" id="secret-area">
-                        <article style="border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px;">
-                            <h3 style="color: var(--accent-cyan); font-family: 'VT323'; font-size: 2rem;">Proyecto “Puerta Fría” </h3>
-                            <p style="color: #666; font-size: 0.9rem;"> (1945–1960)</p>
-                            <p>1945. Con el fin de la segunda guerra mundial, un reducido grupo de chilenos pertenecientes a la alta sociedad 
-                                observó con temor el poderio militar que Estados Unidos y otras potencias habian demostrado. Temian que esta supremacia marcara el inicio 
-                                de una nueva expansion global, donde paises mas pequeños serian absorbidos o invadidos. Ante esta amenaza latente, decidieron adelantarse... recurriendo
-                                a algo que el mundo moderno habia olvidado: las fuerzas arcanas.
-                            </p>
-                            <p>Para pasar desapercibidos, y no caer en el ojo publico, crearon su propia organizacion, crearon al servicio nacional de repuesta a los fenomenos anomalos, abreviado, SENREF.</p>
-                            <img src="Media/puerta fria.png" style="width: 100%; border: 1px solid #333; filter: sepia(0.5);">
-                        </article>
-                    </div>
-                </div>
-            </section>
-
-            <section id="contacto">
-                <h2 class="section-header">CONEXION_EXTERNA</h2>
-                
-                <div class="copy-email-box hover-trigger">
-                    <p style="font-family: 'VT323'; font-size: 1.2rem; color: #aaa;">¿TIENES UNA PROPUESTA O HAS VISTO ALGO RARO?</p>
-                    <button class="copy-btn" onclick="copyToClipboard('filhart.studio@gmail.com')">
-                        <i class="fas fa-copy"></i> COPIAR FRECUENCIA (CORREO)
-                    </button>
-                </div>
-                <div class="discord-terminal hover-trigger">
-                    <div class="terminal-header">
-                        <span class="signal-dot">●</span> 
-                        <span class="signal-text">FRECUENCIA: 5865-F2 [EN LÍNEA]</span>
-                    </div>
-                    
-                    <div class="terminal-content">
-                        <h3 class="terminal-title">COMUNIDAD DE INVESTIGACIÓN</h3>
-                        <p class="terminal-desc">
-                            Se ha establecido un servidor seguro para compartir hallazgos, teorías y reportes de errores. 
-                            La administración no se hace responsable de lo que escuches en los canales de voz.
-                        </p>
-                        
-                        <a href="https://discord.gg/zUGBTa3GKR" target="_blank" class="discord-cta">
-                            <span class="bracket">[</span>
-                            <span class="cta-text">ESTABLECER CONEXIÓN</span>
-                            <span class="bracket">]</span>
-                        </a>
-                    </div>
-                    
-                    <div class="scanline-decoration"></div>
+                <div class="user-actions hidden" style="margin-top: 15px; border-top: 1px dashed #0f0; padding-top: 10px;">
+                    <button class="btn small edit-btn" data-i18n="btn_edit">EDIT RECORD</button>
+                    <button class="btn small danger delete-btn" data-i18n="btn_delete">DELETE RECORD</button>
                 </div>
 
-                <div class="social-links">
-                    <a href="https://www.youtube.com/@FilhArt_Studio" target="_blank" class="social-btn hover-trigger" title="YouTube"><i class="fab fa-youtube"></i></a>
-                    <a href="https://www.instagram.com/filhart_/" target="_blank" class="social-btn hover-trigger" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://patreon.com/FilhArt?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" target="_blank" class="social-btn hover-trigger" title="Patreon"><i class="fab fa-patreon"></i></a>
-                    <a href="https://twitter.com" target="_blank" class="social-btn hover-trigger" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>
-                    <a href="https://filhartstudio.itch.io" target="_blank" class="social-btn hover-trigger" title="Itch.io"><i class="fas fa-gamepad"></i></a>
-                </div>
-            </section>
-
-        </main>
-
-        <footer>
-            <p>FILHART STUDIO © 2025 // NO APAGUES LA LUZ</p>
-            <div class="system-signature hover-trigger">
-                <span>> SYSTEM_ARCHITECT: </span>
-                <span class="creator-name" title="Desarrollado por Floko">FLOKO</span>
-                <span class="cursor-blink">_</span>
-            </div>
-        </footer>
-    </div> 
-    <div id="modal-senref" class="modal-overlay" onclick="closeModal(event)">
-        <div class="modal-window">
-            <div class="modal-header">
-                <span>ARCHIVO: SENREF.EXE</span>
-                <button class="close-btn" onclick="closeModalBtn('modal-senref')">[X]</button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-grid">
-                    <div class="modal-img">
-                        <img src="Media/fondo filhart.png" alt="Senref Gameplay">
-                    </div>
-                    <div class="modal-info">
-                        <h2 style="color: var(--accent-red); margin-top: 0;">SENREF</h2>
-                        <p><strong>GÉNERO:</strong> Terror Analógico / Puzzle</p>
-                        <p><strong>ESTADO:</strong> En desarrollo</p>
-                        <div class="dev-team-section">
-                            <span class="team-title">> PERSONAL ACTIVO:</span>
-                            <ul class="team-list">
-                                <li>Floko (Dev/Director)</li>    
-                                <li>Eldryc (Guión/SFX)</li>
-                                <li>Leuco (3D Art)</li>
-                                <li>Za Coin (3D/Art)</li>
-                                <li>Luci (Concept Art)</li>
-                                <li>Liney (Concept Art)</li>
-                            </ul>
-                        </div>
-                        <hr style="border-color: #333">
-                        <p>Un estudiante universitario de la facultad de periodismo se dirige a un pueblo alejado de la tecnología al sur de chile para poder realizar su tesis, pero descubre que este pueblo no es lo que parece.</p>
-                        <br>
-                        <a href="https://www.patreon.com/cw/FilhArt" target="_blank" class="download-btn hover-trigger">APOYANOS!</a>
-                    </div>
-                </div>
+                <button class="btn small danger admin-only hidden" style="margin-top: 10px;">[ADMIN] PURGE RECORD</button>
             </div>
         </div>
     </div>
+</template>
 
-    <div id="modal-legend" class="modal-overlay" onclick="closeModal(event)">
-        <div class="modal-window">
-            <div class="modal-header">
-                <span>ARCHIVO: ISLAND_MYSTERY.DAT</span>
-                <button class="close-btn" onclick="closeModalBtn('modal-legend')">[X]</button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-grid">
-                    <div class="modal-img">
-                        <img src="Media/darkF.png" alt="Legend Gameplay">
-                    </div>
-                    <div class="modal-info">
-                        <h2 style="color: var(--accent-red); margin-top: 0;">VERMIN´S RISE</h2>
-                        <p><strong>GÉNERO:</strong> RPG / Dark Fantasy</p>
-                        <p><strong>ESTADO:</strong> En Desarrollo</p>
-                        <hr style="border-color: #333">
-                         <div class="dev-team-section">
-                            <span class="team-title">> PERSONAL ACTIVO:</span>
-                            <ul class="team-list">
-                                <li>Floko (Dev/Director)</li> 
-                                <li>Floko (Concept art/Director)</li>     
-                                <li>Misa (3D Art/Concept Art)</li>
-                            </ul>
-                        </div>
-                        <p>Una isla maldita. Reinos en una gran guerra fria, criaturas magicas y extraordinarias, aqui empieza tu historia...</p>
-                        <br>
-                        <a href="https://ko-fi.com/filhart" class="download-btn hover-trigger">APOYANOS</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-    <div id="modal-iwafy" class="modal-overlay" onclick="closeModal(event)">
-        <div class="modal-window">
-            <div class="modal-header">
-                <span>ARCHIVO: SECURITY_LOGS.TXT</span>
-                <button class="close-btn" onclick="closeModalBtn('modal-iwafy')">[X]</button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-grid">
-                    <div class="modal-img">
-                        <img src="Media/bonnie_attack_2.jpg " alt="IWAFY Gameplay">
-                    </div>
-                    <div class="modal-info">
-                        <h2 style="color: var(--accent-red); margin-top: 0;">I WILL ALWAYS FIND YOU</h2>
-                        <p><strong>GÉNERO:</strong> Survival / Fan Game</p>
-                        <hr style="border-color: #333">
-                        <p>Basado en el universo de FNAF. No puedes esconderte para siempre. Los animatronicos te encontrarán, corre...</p>
-                        <br>
-                        <a href="https://filhartstudio.itch.io/i-will-always-find-you"  target="_blank" class="download-btn hover-trigger">JUGAR AHORA</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-estudio" class="modal-overlay" onclick="closeModal(event)">
-        <div class="modal-window">
-            <div class="modal-header">
-                <span>ARCHIVO: STAFF_FILHART.LOG</span>
-                <button class="close-btn" onclick="closeModalBtn('modal-estudio')">[X]</button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-grid">
-                    <div class="modal-img" style="text-align: center;">
-                        <img src="Media/FILHART.png" alt="Logo FilhArt" style="max-width: 200px; border: none; filter: none;">
-                        <div style="text-align: left; margin-top: 20px; font-family: 'VT323'; font-size: 1.2rem; border: 1px dashed #444; padding: 15px;">
-                            <p>> ORIGEN: <span style="color: var(--accent-red)">SANTIAGO, CHILE</span></p>
-                            <p>> FUNDACIÓN:01 JUN 2024</p>
-                            <p>> INTEGRANTES: [ 5 ]</p>
-                            <p>> ESTADO: OPERATIVOS</p>
-                        </div>
-                    </div>
-                    <div class="modal-info">
-                        <h2 style="color: var(--accent-red); margin-top: 0; font-family: 'Rubik Glitch'">TRIPULACION</h2>
-                        <hr style="border-color: #333">
-                        <ul style="list-style: none; padding: 0; line-height: 1.8;">
-                            <li style="border-bottom: 1px solid #222; padding: 5px 0;">
-                                <strong style="color: #fff; font-size: 1.2rem;">FLOKO</strong>
-                                <br><span style="color: #888; font-size: 0.9rem;">// ROL: Fundador y programador</span>
-                            </li>
-                            <li style="border-bottom: 1px solid #222; padding: 5px 0;">
-                                <strong style="color: #fff; font-size: 1.2rem;">NOAH</strong>
-                                <br><span style="color: #888; font-size: 0.9rem;">// ROL: Fundador</span>
-                            </li>
-                            <li style="border-bottom: 1px solid #222; padding: 5px 0;">
-                                <strong style="color: #fff; font-size: 1.2rem;">ELDRYC</strong>
-                                <br><span style="color: #888; font-size: 0.9rem;">// ROL: Fundador y guionista</span>
-                            </li>
-                            <li style="border-bottom: 1px solid #222; padding: 5px 0;">
-                                <strong style="color: #fff; font-size: 1.2rem;">LEUCO</strong>
-                                <br><span style="color: #888; font-size: 0.9rem;">// ROL: 3D Generalist</span>
-                            </li>
-                            <li style="padding: 5px 0;">
-                                <strong style="color: #fff; font-size: 1.2rem;">LUCI</strong>
-                                <br><span style="color: #888; font-size: 0.9rem;">// ROL: Concept Artist</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-secret" class="modal-overlay" style="background: rgba(0,0,0,0.95);">
-        <div class="secret-content" style="text-align: center; color: red; font-family: 'Courier New'; padding: 50px;">
-            <h1 style="font-size: 4rem; text-shadow: 2px 2px white;">¡AYUDA!</h1>
-            <p style="font-size: 2rem;">AQUI DR. RIVERA</p>
-            <p style="font-size: 1.5rem;">ESTOY EN OTRO LUGAR... ESTE LUGAR NO ES MI HOGAR, NO ES LA TIERRA!!!</p>
-            <p>ÉL YA CRUZÓ, YA ESTÁ CON USTEDES</p>
-            <p>NO ACTIVES EL CODIGO AF-01.</p>
-            <br>
-            <p style="color: #fff; cursor: pointer; border: 1px solid white; display: inline-block; padding: 10px;" onclick="disableSecret()">[ CORTAR TRANSMISIÓN ]</p>
-        </div>
-    </div>
-
-    <div id="senref-overlay">
-        <div class="senref-badge">SENREF</div>
-        <h1 style="text-decoration: underline;">AVISO DE INTERVENCIÓN</h1>
-        <div class="senref-text" id="senref-message">
-            <p>ESTE DOMINIO HA SIDO INTERCEPTADO POR EL SERVICIO NACIONAL DE RESPUESTA A FENÓMENOS ANÓMALOS.</p>
-            <p>CÓDIGO DE INCIDENTE: AF-01.</p>
-            <p>NO APAGUE SU TERMINAL. ESPERE INSTRUCCIONES...</p>
-        </div>
-    </div>
-
-    <div id="blackout-screen"></div>
-
-    <script src="script.js"></script>
-
+<script src="script.js"></script>
 </body>
 </html>
