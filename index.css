@@ -2,22 +2,22 @@
    1. CONFIGURACIÓN Y VARIABLES
    ========================================= */
 :root {
-    /* Colores */
+
     --bg-color: #050505;
     --text-primary: #e0e0e0;
     --accent-red: #ff0000;
-    --dark-red: #8a0000; /* Corregido nombre para consistencia */
+    --dark-red: #8a0000; 
     --blood-red: #8a0000;
     --accent-cyan: #00ffff;
     --discord-color: #5865F2;
 
-    /* Fuentes */
+
     --font-main: 'Special Elite', cursive;
     --font-mono: 'VT323', monospace;
     --font-glitch: 'Rubik Glitch', cursive;
     --font-horror: 'Creepster', cursive;
 
-    /* Capas Z-Index (Para evitar conflictos) */
+
     --z-scanlines: 50;
     --z-nav: 100;
     --z-vignette: 500;
@@ -46,14 +46,14 @@ body {
     cursor: crosshair;
 }
 
-/* Selección de texto personalizada */
+
 ::selection {
     background: var(--accent-red);
     color: #000;
     text-shadow: none;
 }
 
-/* Scrollbar personalizada */
+
 ::-webkit-scrollbar {
     width: 10px;
     background: #000;
@@ -64,7 +64,7 @@ body {
     border-radius: 2px;
 }
 
-/* Estilos de Texto Utilitarios */
+
 .redacted {
     background: #000;
     color: #000;
@@ -82,7 +82,7 @@ body {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    opacity: 0; /* Oculto hasta click */
+    opacity: 0; 
     transition: opacity 2s;
     background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
 }
@@ -105,7 +105,7 @@ body {
     animation: breathe 6s infinite alternate ease-in-out;
 }
 
-/* Rastro del Mouse */
+
 .cursor-trail {
     position: fixed;
     width: 10px; height: 10px;
@@ -146,7 +146,7 @@ body {
     margin-top: 10px;
 }
 
-/* Easter Egg: Pantalla Poseída */
+
 #start-screen.possessed {
     animation: intense-shake 0.1s infinite, color-shift 0.2s infinite alternate;
     background: #1a0000 !important;
@@ -216,7 +216,7 @@ header {
     font-size: 1.2rem;
 }
 
-/* Navegación */
+
 .glitch-nav {
     display: flex; justify-content: center; gap: 20px; padding: 20px;
     background: rgba(20,0,0,0.3);
@@ -286,7 +286,7 @@ h2.section-header::after { content: '_'; animation: blink 0.8s infinite; }
 /* =========================================
    7. COMPONENTES: CLASIFICADO Y DISCORD
    ========================================= */
-/* Carpetas Clasificadas */
+
 .classified-folder {
     border: 1px dashed #444;
     padding: 20px;
@@ -301,7 +301,7 @@ h2.section-header::after { content: '_'; animation: blink 0.8s infinite; }
     transform: rotate(15deg); opacity: 0.7; pointer-events: none;
 }
 
-/* Sección Blog Confidencial (Lock) */
+
 .classified-section {
     position: relative;
     border: 2px dashed #444;
@@ -347,7 +347,7 @@ h2.section-header::after { content: '_'; animation: blink 0.8s infinite; }
 }
 .unlock-btn:hover { background: red; box-shadow: 0 0 10px red; }
 
-/* Terminal Discord */
+
 .discord-terminal {
     --terminal-bg: rgba(88, 101, 242, 0.05);
     border: 1px dashed var(--discord-color);
@@ -439,7 +439,7 @@ footer {
 }
 .copy-btn:hover { background: var(--accent-red); box-shadow: 0 0 15px var(--accent-red); }
 
-/* Notificación Toast */
+
 #copy-toast {
     visibility: hidden; min-width: 250px;
     background-color: #111; color: var(--accent-cyan); text-align: center;
@@ -451,7 +451,7 @@ footer {
 }
 #copy-toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
 
-/* Firma del Sistema */
+
 .system-signature {
     margin-top: 15px; font-family: var(--font-mono); font-size: 1.1rem;
     color: #555; letter-spacing: 1px; text-transform: uppercase;
@@ -521,7 +521,7 @@ footer {
     background: #fff; color: var(--accent-red); box-shadow: 0 0 15px var(--accent-red);
 }
 
-/* Modal Secreto */
+
 #modal-secret {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #000; z-index: var(--z-secret);
@@ -531,7 +531,7 @@ footer {
 #modal-secret.active { display: flex; }
 .secret-content h1 { font-size: 5rem; animation: blink 0.1s infinite; }
 
-/* Overlay SENREF (Gobierno/Azul) */
+
 #senref-overlay {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: #000080; color: #fff; z-index: var(--z-overlay);
@@ -568,10 +568,88 @@ body.cursed-mode .scanlines {
     );
 }
 
-/* Apagón Final */
+
 #blackout-screen {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #000; z-index: var(--z-blackout);
+}
+/* =========================================
+   12. ADAPTABILIDAD MÓVIL (RESPONSIVE)
+   ========================================= */
+@media screen and (max-width: 768px) {
+    
+ 
+    .main-title {
+        font-size: 3rem; 
+        letter-spacing: 2px;
+        line-height: 1.1;
+    }
+
+   
+    .glitch-nav {
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .nav-btn {
+        font-size: 1.1rem; 
+    }
+
+ 
+    section {
+        margin: 30px auto; 
+        padding: 0 15px;
+    }
+
+    h2.section-header {
+        font-size: 2rem;
+    }
+
+    
+    .modal-window {
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .modal-grid {
+        flex-direction: column; 
+        gap: 15px;
+    }
+
+    .modal-img, .modal-info {
+        min-width: 100%; 
+    }
+
+    .modal-img img {
+        height: auto; 
+        max-height: 200px; 
+    }
+    
+   
+    .senref-badge {
+        font-size: 1.8rem;
+        padding: 5px 15px;
+        border: 2px solid #fff;
+    }
+    
+    #senref-overlay {
+        border: 5px solid #fff; 
+        padding: 10px;
+    }
+
+    .senref-text {
+        font-size: 1rem;
+    }
+    
+  
+    .discord-terminal {
+        width: 95%;
+        margin: 20px auto;
+    }
+    
+    .terminal-title {
+        font-size: 1.4rem;
+    }
 }
 
 /* =========================================
@@ -637,82 +715,4 @@ body.cursed-mode .scanlines {
     0% { opacity: 1; text-shadow: 0 0 5px red; }
     50% { opacity: 0.3; text-shadow: none; }
     100% { opacity: 1; text-shadow: 0 0 5px red; }
-}
-/* =========================================
-   12. ADAPTABILIDAD MÓVIL (RESPONSIVE)
-   ========================================= */
-@media screen and (max-width: 768px) {
-    
-    /* 1. Ajustar el Título Gigante */
-    .main-title {
-        font-size: 3rem; /* Reduce de 6rem a 3rem */
-        letter-spacing: 2px;
-        line-height: 1.1;
-    }
-
-    /* 2. Ajustar la Navegación */
-    .glitch-nav {
-        gap: 10px;
-        padding: 10px;
-    }
-    
-    .nav-btn {
-        font-size: 1.1rem; /* Botones más pequeños */
-    }
-
-    /* 3. Márgenes y Espacios */
-    section {
-        margin: 30px auto; /* Menos espacio entre secciones */
-        padding: 0 15px;
-    }
-
-    h2.section-header {
-        font-size: 2rem;
-    }
-
-    /* 4. Ajustes de la Ventana Modal (Pop-up) */
-    .modal-window {
-        width: 95%;
-        max-height: 85vh;
-    }
-
-    .modal-grid {
-        flex-direction: column; /* Pone la imagen arriba y texto abajo */
-        gap: 15px;
-    }
-
-    .modal-img, .modal-info {
-        min-width: 100%; /* Ocupan todo el ancho disponible */
-    }
-
-    .modal-img img {
-        height: auto; /* Altura automática */
-        max-height: 200px; /* Para que no ocupe toda la pantalla */
-    }
-    
-    /* 5. Ajustes de la Pantalla de Gobierno (Senref) */
-    .senref-badge {
-        font-size: 1.8rem;
-        padding: 5px 15px;
-        border: 2px solid #fff;
-    }
-    
-    #senref-overlay {
-        border: 5px solid #fff; /* Borde más fino */
-        padding: 10px;
-    }
-
-    .senref-text {
-        font-size: 1rem;
-    }
-    
-    /* 6. Ajustes de Terminal Discord */
-    .discord-terminal {
-        width: 95%;
-        margin: 20px auto;
-    }
-    
-    .terminal-title {
-        font-size: 1.4rem;
-    }
 }
